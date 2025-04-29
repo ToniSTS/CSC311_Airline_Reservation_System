@@ -10,10 +10,10 @@ import java.sql.Statement;
 
 public class DB {
 
-    final String MYSQL_SERVER_URL = "jdbc:mysql://localhost/"; //replace with sever URL
+    final String MYSQL_SERVER_URL = "jdbc:mysql://csc311airlinereserv.mysql.database.azure.com";//replace with sever URL
     final String DB_URL = MYSQL_SERVER_URL + "DBname";
-    final String USERNAME = "admin"; //replace with username
-    final String PASSWORD = "password"; //replace with password
+    final String USERNAME = "Group5"; //replace with username
+    final String PASSWORD = "AdminLog5"; //replace with password
 
     public  boolean connectToDatabase() {
         boolean hasRegistredUsers = false;
