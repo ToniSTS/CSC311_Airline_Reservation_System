@@ -10,7 +10,6 @@ public void main() {
     System.out.println(chatGPT("What is the weather in germany?"));
 }
 
-
 public static String chatGPT(String message) {
     String url = "https://api.openai.com/v1/chat/completions";
     String apiKey = "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"; // API key goes here
