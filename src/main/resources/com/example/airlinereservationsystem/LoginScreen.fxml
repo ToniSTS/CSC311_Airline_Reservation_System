@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.LoginController">
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.airlinereservationsystem.LoginController">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Login to Airline Reservation"/>

@@ -5,14 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 
 public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("fxml/LoginScreen.fxml"));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/LoginScreen.fxml"));
+        Parent root = loader.load();
+
         primaryStage.setTitle("Airline Reservation - Login");
         primaryStage.setScene(new Scene(root, 400, 300));
         primaryStage.show();

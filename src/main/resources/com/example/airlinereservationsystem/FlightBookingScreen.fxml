@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.airlinereservationsystem.FlightBookingController" spacing="10">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Search for Flights" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="From (Airport Code):" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="originField" promptText="e.g., JFK" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Label text="To (Airport Code):" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="destinationField" promptText="e.g., LAX" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Button text="Search Flights" onAction="#handleSearch" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    </GridPane>
+
+    <Label fx:id="statusLabel" style="-fx-font-style: italic;"/>
+
+    <Label text="Available Flights:"/>
+    <ListView fx:id="resultsListView" VBox.vgrow="ALWAYS"/>
+
+    <Label fx:id="recommendationLabel" style="-fx-font-style: italic;"/>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button text="Book Selected Flight" onAction="#handleBookFlight"/>
+    </HBox>
+</VBox>
