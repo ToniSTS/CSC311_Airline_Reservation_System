@@ -36,3 +36,18 @@
 #signOutButton:pressed {
     -fx-background-color: #8B0000; /* Darker red when pressed */
 }
+
+/* Style for admin bypass button */
+#adminBypassButton {
+    -fx-background-color: #8A2BE2; /* Purple color for admin functions */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+#adminBypassButton:hover {
+    -fx-background-color: #9932CC; /* Brighter purple when hovered */
+}
+
+#adminBypassButton:pressed {
+    -fx-background-color: #6A1B9A; /* Darker purple when pressed */
+}

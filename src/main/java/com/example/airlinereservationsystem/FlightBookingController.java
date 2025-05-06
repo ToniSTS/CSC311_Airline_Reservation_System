@@ -24,11 +24,15 @@ public class FlightBookingController {
     @FXML private Button viewBookingsButton;
     @FXML private Button chatGptButton;
     @FXML private Button signOutButton;
+    @FXML private Button adminBypassButton; // Button visible only to admin users
 
     private FlightRecommendationSystem recommendationSystem = new FlightRecommendationSystem();
     private FlightAPIService apiService = new FlightAPIService();
     private DB database = new DB();
     private String currentUser = "guest"; // Default user
+
+    // Admin credentials
+    private final String ADMIN_USERNAME = "admin";
 
     @FXML
     private void initialize() {
@@ -50,6 +54,11 @@ public class FlightBookingController {
 
         statusLabel.setText("Ready to search for flights");
 
+        // Hide admin bypass button by default (will show only for admin user)
+        if (adminBypassButton != null) {
+            adminBypassButton.setVisible(false);
+        }
+
         // Initialize database connection
         database.connectToDatabase();
     }
@@ -57,6 +66,12 @@ public class FlightBookingController {
     public void initializeUser(String username) {
         this.currentUser = username;
         statusLabel.setText("Welcome, " + username + "! Ready to search for flights.");
+
+        // Show admin bypass button only for admin user
+        if (adminBypassButton != null && username.equals(ADMIN_USERNAME)) {
+            adminBypassButton.setVisible(true);
+            statusLabel.setText("Welcome Admin! You have full access to all features.");
+        }
     }
 
     @FXML
@@ -131,9 +146,110 @@ public class FlightBookingController {
             return;
         }
 
-        statusLabel.setText("Proceeding to payment...");
+        // If admin user, bypass payment directly
+        if (currentUser.equals(ADMIN_USERNAME)) {
+            // Admin bypass - directly go to confirmation screen without database
+            skipToConfirmation(selectedFlight);
+        } else {
+            // Regular user - proceed to payment screen
+            statusLabel.setText("Proceeding to payment...");
+            goToPaymentScreen(selectedFlight);
+        }
+    }
 
-        // Instead of booking directly, proceed to payment screen
+    @FXML
+    private void handleAdminBypass(ActionEvent event) {
+        // This method is called when the admin bypass button is clicked
+        Flight selectedFlight = resultsListView.getSelectionModel().getSelectedItem();
+
+        if (selectedFlight == null) {
+            showAlert("Please select a flight to book with admin bypass");
+            return;
+        }
+
+        // Admin bypass - directly go to confirmation screen without database
+        skipToConfirmation(selectedFlight);
+    }
+
+    /**
+     * For admin users - skip database validation and go straight to confirmation
+     */
+    private void skipToConfirmation(Flight selectedFlight) {
+        statusLabel.setText("Admin bypass activated...");
+
+        try {
+            // Attempt to record in database but don't let it block us if it fails
+            try {
+                database.recordBooking(
+                        currentUser,
+                        selectedFlight.getFlightNumber(),
+                        selectedFlight.getDepartureAirport(),
+                        selectedFlight.getArrivalAirport(),
+                        selectedFlight.getDepartureDate()
+                );
+            } catch (Exception e) {
+                // Just log it but continue - we're in admin mode
+                System.out.println("Warning: Could not record booking in database: " + e.getMessage());
+            }
+
+            // Load the confirmation screen
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/PaymentConfirmationScreen.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and pass the data
+            PaymentConfirmationController controller = loader.getController();
+            controller.initData(selectedFlight, currentUser, selectedFlight.getPrice());
+
+            // Set the scene
+            Stage stage = (Stage) resultsListView.getScene().getWindow();
+            stage.setTitle("Booking Confirmation (Admin Mode)");
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            statusLabel.setText("Error loading confirmation screen: " + e.getMessage());
+            showAlert("Error: Could not load confirmation screen. " + e.getMessage());
+        }
+    }
+
+    private void directBooking(Flight selectedFlight) {
+        statusLabel.setText("Processing admin direct booking...");
+
+        // Record the booking in the database
+        boolean bookingSuccess = database.recordBooking(
+                currentUser,
+                selectedFlight.getFlightNumber(),
+                selectedFlight.getDepartureAirport(),
+                selectedFlight.getArrivalAirport(),
+                selectedFlight.getDepartureDate()
+        );
+
+        if (bookingSuccess) {
+            // Proceed directly to confirmation screen
+            try {
+                // Load the confirmation screen
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/PaymentConfirmationScreen.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller and pass the data
+                PaymentConfirmationController controller = loader.getController();
+                controller.initData(selectedFlight, currentUser, selectedFlight.getPrice());
+
+                // Set the scene
+                Stage stage = (Stage) resultsListView.getScene().getWindow();
+                stage.setTitle("Booking Confirmation");
+                stage.setScene(new Scene(root));
+            } catch (Exception e) {
+                e.printStackTrace();
+                statusLabel.setText("Error loading confirmation screen: " + e.getMessage());
+                showAlert("Error: Could not load confirmation screen. " + e.getMessage());
+            }
+        } else {
+            showAlert("Error: Could not record booking in the database.");
+            statusLabel.setText("Booking failed");
+        }
+    }
+
+    private void goToPaymentScreen(Flight selectedFlight) {
         try {
             // Load the payment screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/PaymentScreen.fxml"));

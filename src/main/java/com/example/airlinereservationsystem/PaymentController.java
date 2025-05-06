@@ -29,6 +29,9 @@ public class PaymentController {
     private String username;
     private DB database = new DB();
 
+    // Admin credentials for bypass feature
+    private final String ADMIN_USERNAME = "admin";
+
     public void initData(Flight flight, String username) {
         this.selectedFlight = flight;
         this.username = username;
@@ -46,6 +49,15 @@ public class PaymentController {
 
         // Update the price label
         priceLabel.setText(String.format("Total Price: $%.2f", flight.getPrice()));
+
+        // If user is admin, pre-fill payment details for quick bypass
+        if (username.equals(ADMIN_USERNAME)) {
+            cardName.setText("Admin User");
+            cardNumber.setText("1234567890123456");
+            cardExpiry.setText("12/25");
+            cardCVV.setText("123");
+            billingAddress.setText("Admin Address");
+        }
     }
 
     @FXML
@@ -57,7 +69,14 @@ public class PaymentController {
     // Called when "Pay Now" button is clicked
     @FXML
     public void handlePayNow(ActionEvent event) {
-        // Validate payment information
+        // Check for admin bypass
+        if (username.equals(ADMIN_USERNAME)) {
+            // Admin can bypass payment validation
+            processSuccessfulPayment();
+            return;
+        }
+
+        // Regular user - validate payment information
         if (!validatePaymentInfo()) {
             return;
         }
@@ -76,25 +95,7 @@ public class PaymentController {
 
                 javafx.application.Platform.runLater(() -> {
                     if (paymentSuccess) {
-                        // Record the booking in the database
-                        boolean bookingSuccess = database.recordBooking(
-                                username,
-                                selectedFlight.getFlightNumber(),
-                                selectedFlight.getDepartureAirport(),
-                                selectedFlight.getArrivalAirport(),
-                                selectedFlight.getDepartureDate()
-                        );
-
-                        if (bookingSuccess) {
-                            showAlert(Alert.AlertType.INFORMATION, "Success",
-                                    "Payment successful! Your flight has been booked.");
-
-                            // Return to flight booking screen
-                            goToFlightBookingScreen();
-                        } else {
-                            showAlert(Alert.AlertType.ERROR, "Booking Error",
-                                    "Payment was successful, but there was an error recording your booking. Please contact support.");
-                        }
+                        processSuccessfulPayment();
                     } else {
                         showAlert(Alert.AlertType.ERROR, "Payment Failed",
                                 "There was an issue processing your payment. Please try again or use a different payment method.");
@@ -109,6 +110,46 @@ public class PaymentController {
                 });
             }
         }).start();
+    }
+
+    private void processSuccessfulPayment() {
+        // Record the booking in the database
+        boolean bookingSuccess = database.recordBooking(
+                username,
+                selectedFlight.getFlightNumber(),
+                selectedFlight.getDepartureAirport(),
+                selectedFlight.getArrivalAirport(),
+                selectedFlight.getDepartureDate()
+        );
+
+        if (bookingSuccess) {
+            // Proceed to confirmation screen
+            try {
+                // Load the confirmation screen
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/PaymentConfirmationScreen.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller and pass the data
+                PaymentConfirmationController controller = loader.getController();
+                controller.initData(selectedFlight, username, selectedFlight.getPrice());
+
+                // Set the scene
+                Stage stage = (Stage) payButton.getScene().getWindow();
+                stage.setTitle("Payment Confirmation");
+                stage.setScene(new Scene(root));
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Navigation Error",
+                        "Error loading confirmation screen: " + e.getMessage());
+
+                // If confirmation screen fails to load, go back to flight booking
+                goToFlightBookingScreen();
+            }
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Booking Error",
+                    "Payment was successful, but there was an error recording your booking. Please contact support.");
+            goToFlightBookingScreen();
+        }
     }
 
     @FXML
