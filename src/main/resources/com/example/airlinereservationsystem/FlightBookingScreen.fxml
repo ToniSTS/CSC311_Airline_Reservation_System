@@ -25,6 +25,9 @@
         <Button text="Search Flights" onAction="#handleSearch" GridPane.columnIndex="1" GridPane.rowIndex="3" />
     </GridPane>
 
+    <Button fx:id="chatGptButton" text="Ask ChatGPT"
+            layoutX="700" layoutY="10" onAction="#handleChatGptRecommendation"/>
+
     <Label fx:id="statusLabel"/>
 
     <Label text="Available Flights:"/>

@@ -19,6 +19,9 @@ public class FlightBookingController {
     @FXML private Label statusLabel;
     @FXML private Button viewBookingsButton; // Add this if you have a button in FXML
 
+    @FXML private Button chatGptButton;
+
+
     private FlightRecommendationSystem recommendationSystem = new FlightRecommendationSystem();
     private FlightAPIService apiService = new FlightAPIService();
     private DB database = new DB(); // Add database connection
@@ -203,6 +206,40 @@ public class FlightBookingController {
             }
         }).start();
     }
+
+    @FXML
+    private void handleChatGptRecommendation(ActionEvent event) {
+        String origin = originField.getText().toUpperCase();
+        String destination = destinationField.getText().toUpperCase();
+
+        if (origin.isEmpty() || destination.isEmpty()) {
+            showAlert("Please enter both origin and destination to get a recommendation.");
+            return;
+        }
+
+        if (origin.equals(destination)) {
+            showAlert("Origin and destination cannot be the same.");
+            return;
+        }
+
+        statusLabel.setText("Getting ChatGPT recommendation...");
+
+        new Thread(() -> {
+            try {
+                String recommendation = ChatGpt.getFlightRecommendation(origin, destination);
+                javafx.application.Platform.runLater(() -> {
+                    recommendationLabel.setText("ChatGPT Suggestion: " + recommendation);
+                    statusLabel.setText("Recommendation received");
+                });
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    showAlert("Failed to get recommendation from ChatGPT: " + e.getMessage());
+                    statusLabel.setText("Recommendation failed");
+                });
+            }
+        }).start();
+    }
+
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
