@@ -5,6 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +22,8 @@ public class FlightBookingController {
     @FXML private Label recommendationLabel;
     @FXML private Label statusLabel;
     @FXML private Button viewBookingsButton; // Add this if you have a button in FXML
-
     @FXML private Button chatGptButton;
-
+    @FXML private Button signOutButton; // Added for sign-out functionality
 
     private FlightRecommendationSystem recommendationSystem = new FlightRecommendationSystem();
     private FlightAPIService apiService = new FlightAPIService();
@@ -240,6 +243,29 @@ public class FlightBookingController {
         }).start();
     }
 
+    @FXML
+    private void handleSignOut(ActionEvent event) {
+        // Clear the current user session
+        this.currentUser = "guest";
+
+        // Show confirmation message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sign Out");
+        alert.setHeaderText(null);
+        alert.setContentText("You have been successfully signed out.");
+        alert.showAndWait();
+
+        // Return to the login screen
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/airlinereservationsystem/LoginScreen.fxml"));
+            Stage stage = (Stage) signOutButton.getScene().getWindow();
+            stage.setTitle("Login");
+            stage.setScene(new Scene(root, 400, 300));
+        } catch (Exception e) {
+            e.printStackTrace();
+            statusLabel.setText("Error returning to login screen: " + e.getMessage());
+        }
+    }
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

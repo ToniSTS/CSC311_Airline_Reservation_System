@@ -22,3 +22,17 @@
     -fx-control-inner-background: #222;
     -fx-text-fill: white;
 }
+
+/* Style for sign-out button */
+#signOutButton {
+    -fx-background-color: #B22222; /* Dark red color */
+    -fx-text-fill: white;
+}
+
+#signOutButton:hover {
+    -fx-background-color: #DC143C; /* Brighter red when hovered */
+}
+
+#signOutButton:pressed {
+    -fx-background-color: #8B0000; /* Darker red when pressed */
+}

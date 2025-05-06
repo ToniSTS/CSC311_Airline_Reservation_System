@@ -10,6 +10,13 @@
       stylesheets="@StyleFlight.css">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Label fx:id="statusLabel" HBox.hgrow="ALWAYS"/>
+        <Button fx:id="viewBookingsButton" text="My Bookings" onAction="#handleViewBookings"/>
+        <Button fx:id="signOutButton" text="Sign Out" onAction="#handleSignOut"
+                style="-fx-background-color: #B22222;"/> <!-- Added sign-out button with dark red color -->
+    </HBox>
+
     <Label text="Search for Flights"/>
 
     <GridPane hgap="10" vgap="10">
@@ -27,8 +34,6 @@
 
     <Button fx:id="chatGptButton" text="Ask ChatGPT"
             layoutX="700" layoutY="10" onAction="#handleChatGptRecommendation"/>
-
-    <Label fx:id="statusLabel"/>
 
     <Label text="Available Flights:"/>
     <ListView fx:id="resultsListView" VBox.vgrow="ALWAYS"/>
