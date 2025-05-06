@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class MainApp extends Application {
 
     @Override
@@ -14,8 +16,12 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/LoginScreen.fxml"));
         Parent root = loader.load();
 
+        Scene scene = new Scene(root,400,300);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("Style.css")).toExternalForm());
+
         primaryStage.setTitle("Airline Reservation - Login");
-        primaryStage.setScene(new Scene(root, 400, 300));
+
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
