@@ -1,30 +1,24 @@
 .root {
     -fx-background-color: black;
+}
+
+.label, .hyperlink {
     -fx-text-fill: white;
 }
 
-.label, .text-field, .date-picker, .button, .list-view {
+.text-field, .password-field, .date-picker {
     -fx-text-fill: white;
-    -fx-background-color: #222222;
-    -fx-border-color: white;
-}
-
-.list-view .list-cell {
-    -fx-text-fill: limegreen;
-    -fx-background-color: transparent;
-}
-
-.list-view .list-cell:selected {
-    -fx-background-color: #444444;
-    -fx-text-fill: white;
-}
-
-.text-field, .date-picker {
     -fx-prompt-text-fill: gray;
+    -fx-background-color: #222;
 }
 
 .button {
-    -fx-background-color: #333333;
-    -fx-border-color: white;
+    -fx-background-color: green;
+    -fx-text-fill: white;
+}
+
+.list-view {
+    -fx-background-color: #222;
+    -fx-control-inner-background: #222;
     -fx-text-fill: white;
 }
