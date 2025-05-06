@@ -12,9 +12,12 @@
       alignment="CENTER">
     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
-    <Text text="Payment Confirmed!" fill="white" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="backToAdminButton" text="Back to Admin Menu" onAction="#handleBackToAdmin"
+                style="-fx-background-color: #8A2BE2;"/>
+    </HBox>
 
-    <!-- Removed ImageView that was causing errors -->
+    <Text text="Payment Confirmed!" fill="white" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
     <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #333333; -fx-padding: 20; -fx-background-radius: 10;">
         <Label text="Thank you for your purchase!" style="-fx-font-size: 16px;"/>

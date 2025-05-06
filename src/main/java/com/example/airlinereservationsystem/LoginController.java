@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType; // Added this import
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -35,9 +37,28 @@ public class LoginController {
         if (user.isEmpty() || password.isEmpty()) {
             messageLabel.setText("Please fill in all fields.");
         } else if (user.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)) {
-            // Admin login successful
+            // Admin login successful - Show confirmation dialog with options
             messageLabel.setText("Admin login successful!");
-            loadFlightBookingScreen(event, "Admin Dashboard - Flight Booking", user);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Admin Login");
+            alert.setHeaderText("Welcome Admin!");
+            alert.setContentText("Would you like to go to the Admin Navigation Menu or directly to Flight Booking?");
+
+            ButtonType adminNavButton = new ButtonType("Admin Navigation");
+            ButtonType flightBookingButton = new ButtonType("Flight Booking");
+
+            alert.getButtonTypes().setAll(adminNavButton, flightBookingButton);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == adminNavButton) {
+                    // Admin chose to go to the navigation menu
+                    loadAdminNavigationScreen(event);
+                } else {
+                    // Admin chose to go directly to flight booking
+                    loadFlightBookingScreen(event, "Admin Dashboard - Flight Booking", user);
+                }
+            });
         } else {
             // Check if user exists in database
             boolean loginSuccess = database.verifyLogin(user, password);
@@ -48,6 +69,20 @@ public class LoginController {
             } else {
                 messageLabel.setText("Invalid username or password.");
             }
+        }
+    }
+
+    private void loadAdminNavigationScreen(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/AdminNavigationScreen.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setTitle("Admin Navigation");
+            stage.setScene(new Scene(root, 500, 500));
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Error loading admin navigation screen: " + e.getMessage());
         }
     }
 

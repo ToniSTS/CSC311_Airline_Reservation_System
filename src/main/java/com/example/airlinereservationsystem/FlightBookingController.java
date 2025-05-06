@@ -25,6 +25,7 @@ public class FlightBookingController {
     @FXML private Button chatGptButton;
     @FXML private Button signOutButton;
     @FXML private Button adminBypassButton; // Button visible only to admin users
+    @FXML private Button backToAdminButton; // Back button for admin to return to admin menu
 
     private FlightRecommendationSystem recommendationSystem = new FlightRecommendationSystem();
     private FlightAPIService apiService = new FlightAPIService();
@@ -54,9 +55,13 @@ public class FlightBookingController {
 
         statusLabel.setText("Ready to search for flights");
 
-        // Hide admin bypass button by default (will show only for admin user)
+        // Hide admin buttons by default
         if (adminBypassButton != null) {
             adminBypassButton.setVisible(false);
+        }
+
+        if (backToAdminButton != null) {
+            backToAdminButton.setVisible(false);
         }
 
         // Initialize database connection
@@ -67,10 +72,32 @@ public class FlightBookingController {
         this.currentUser = username;
         statusLabel.setText("Welcome, " + username + "! Ready to search for flights.");
 
-        // Show admin bypass button only for admin user
-        if (adminBypassButton != null && username.equals(ADMIN_USERNAME)) {
-            adminBypassButton.setVisible(true);
+        // Show admin buttons only for admin user
+        if (username.equals(ADMIN_USERNAME)) {
+            if (adminBypassButton != null) {
+                adminBypassButton.setVisible(true);
+            }
+
+            if (backToAdminButton != null) {
+                backToAdminButton.setVisible(true);
+            }
+
             statusLabel.setText("Welcome Admin! You have full access to all features.");
+        }
+    }
+
+    @FXML
+    private void handleBackToAdmin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/AdminNavigationScreen.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) backToAdminButton.getScene().getWindow();
+            stage.setTitle("Admin Navigation");
+            stage.setScene(new Scene(root, 500, 500));
+        } catch (Exception e) {
+            e.printStackTrace();
+            statusLabel.setText("Error returning to admin menu: " + e.getMessage());
         }
     }
 
@@ -208,44 +235,6 @@ public class FlightBookingController {
             e.printStackTrace();
             statusLabel.setText("Error loading confirmation screen: " + e.getMessage());
             showAlert("Error: Could not load confirmation screen. " + e.getMessage());
-        }
-    }
-
-    private void directBooking(Flight selectedFlight) {
-        statusLabel.setText("Processing admin direct booking...");
-
-        // Record the booking in the database
-        boolean bookingSuccess = database.recordBooking(
-                currentUser,
-                selectedFlight.getFlightNumber(),
-                selectedFlight.getDepartureAirport(),
-                selectedFlight.getArrivalAirport(),
-                selectedFlight.getDepartureDate()
-        );
-
-        if (bookingSuccess) {
-            // Proceed directly to confirmation screen
-            try {
-                // Load the confirmation screen
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/PaymentConfirmationScreen.fxml"));
-                Parent root = loader.load();
-
-                // Get the controller and pass the data
-                PaymentConfirmationController controller = loader.getController();
-                controller.initData(selectedFlight, currentUser, selectedFlight.getPrice());
-
-                // Set the scene
-                Stage stage = (Stage) resultsListView.getScene().getWindow();
-                stage.setTitle("Booking Confirmation");
-                stage.setScene(new Scene(root));
-            } catch (Exception e) {
-                e.printStackTrace();
-                statusLabel.setText("Error loading confirmation screen: " + e.getMessage());
-                showAlert("Error: Could not load confirmation screen. " + e.getMessage());
-            }
-        } else {
-            showAlert("Error: Could not record booking in the database.");
-            statusLabel.setText("Booking failed");
         }
     }
 

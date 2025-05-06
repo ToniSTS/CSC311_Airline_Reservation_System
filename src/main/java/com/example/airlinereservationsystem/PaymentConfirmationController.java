@@ -12,7 +12,7 @@ import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList; // Added this import
+import java.util.ArrayList;
 import java.util.Random;
 
 public class PaymentConfirmationController {
@@ -23,6 +23,7 @@ public class PaymentConfirmationController {
     @FXML private Label totalAmountLabel;
     @FXML private Button returnButton;
     @FXML private Button viewBookingsButton;
+    @FXML private Button backToAdminButton;
 
     private String username;
     private Flight bookedFlight;
@@ -39,6 +40,26 @@ public class PaymentConfirmationController {
             System.out.println("Warning: Could not connect to database in confirmation screen: " + e.getMessage());
             // Continue anyway - we're in a confirmation screen
         }
+
+        // Hide back to admin button by default
+        if (backToAdminButton != null) {
+            backToAdminButton.setVisible(false);
+        }
+    }
+
+    /**
+     * Explicitly set admin mode and update UI accordingly
+     */
+    public void setAdminMode(boolean isAdmin) {
+        this.isAdminMode = isAdmin;
+
+        // Show back to admin button for admin users
+        if (backToAdminButton != null) {
+            backToAdminButton.setVisible(isAdmin);
+            System.out.println("Admin mode set to: " + isAdmin + " - Back button visible: " + backToAdminButton.isVisible());
+        } else {
+            System.out.println("Warning: backToAdminButton is null");
+        }
     }
 
     public void initData(Flight flight, String username, double amount) {
@@ -48,6 +69,14 @@ public class PaymentConfirmationController {
         // Check if admin mode
         if ("admin".equals(username)) {
             isAdminMode = true;
+
+            // Show back to admin button for admin users
+            if (backToAdminButton != null) {
+                backToAdminButton.setVisible(true);
+                System.out.println("Admin user detected - Setting back button visible");
+            } else {
+                System.out.println("Warning: backToAdminButton is null in initData");
+            }
         }
 
         // Generate a random booking reference
@@ -81,6 +110,21 @@ public class PaymentConfirmationController {
         }
 
         return sb.toString();
+    }
+
+    @FXML
+    public void handleBackToAdmin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/AdminNavigationScreen.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) backToAdminButton.getScene().getWindow();
+            stage.setTitle("Admin Navigation");
+            stage.setScene(new Scene(root, 500, 500));
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error returning to admin menu: " + e.getMessage());
+        }
     }
 
     @FXML
