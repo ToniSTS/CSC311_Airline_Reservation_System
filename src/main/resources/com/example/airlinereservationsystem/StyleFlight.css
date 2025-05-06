@@ -1,0 +1,24 @@
+.root {
+    -fx-background-color: black;
+}
+
+.label, .hyperlink {
+    -fx-text-fill: white;
+}
+
+.text-field, .password-field, .date-picker {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: gray;
+    -fx-background-color: #222;
+}
+
+.button {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+}
+
+.list-view {
+    -fx-background-color: #222;
+    -fx-control-inner-background: #222;
+    -fx-text-fill: white;
+}
