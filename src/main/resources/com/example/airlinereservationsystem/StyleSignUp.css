@@ -1,0 +1,39 @@
+.root {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.text-field,
+.password-field {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: white;
+    -fx-border-color: #444;
+    -fx-border-radius: 4px;
+    -fx-padding: 5;
+}
+
+.button {
+    -fx-background-color: #008000; /* green */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 4px;
+    -fx-padding: 8 12;
+}
+
+.button:hover {
+    -fx-background-color: #00cc00; /* lighter green */
+}
+
+.message-label {
+    -fx-text-fill: white;
+}
+
+.list-view {
+    -fx-control-inner-background: #000000;
+    -fx-cell-hover-color: #003300;
+    -fx-text-fill: green;
+}

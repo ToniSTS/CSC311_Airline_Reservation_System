@@ -1,0 +1,30 @@
+.root {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.label, .text-field, .date-picker, .button, .list-view {
+    -fx-text-fill: white;
+    -fx-background-color: #222222;
+    -fx-border-color: white;
+}
+
+.list-view .list-cell {
+    -fx-text-fill: limegreen;
+    -fx-background-color: transparent;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
+}
+
+.text-field, .date-picker {
+    -fx-prompt-text-fill: gray;
+}
+
+.button {
+    -fx-background-color: #333333;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
