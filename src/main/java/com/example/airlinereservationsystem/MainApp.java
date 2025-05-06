@@ -13,13 +13,13 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/LoginScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/WelcomeScreen.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root,400,300);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("Style.css")).toExternalForm());
 
-        primaryStage.setTitle("Airline Reservation - Login");
+        primaryStage.setTitle("Airline Reservation - Welcome!");
 
         primaryStage.setScene(scene);
         primaryStage.show();
