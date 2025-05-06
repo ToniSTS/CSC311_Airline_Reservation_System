@@ -20,7 +20,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("Style.css")).toExternalForm());
 
         primaryStage.setTitle("Airline Reservation - Login");
-        //primaryStage.setScene(new Scene(root, 400, 300));
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
