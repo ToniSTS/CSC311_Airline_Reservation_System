@@ -241,7 +241,6 @@ public class FlightBookingController {
     }
 
 
-
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information");

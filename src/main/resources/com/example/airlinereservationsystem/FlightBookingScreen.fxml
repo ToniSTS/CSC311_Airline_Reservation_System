@@ -28,7 +28,6 @@
     <Button fx:id="chatGptButton" text="Ask ChatGPT"
             layoutX="700" layoutY="10" onAction="#handleChatGptRecommendation"/>
 
-
     <Label fx:id="statusLabel"/>
 
     <Label text="Available Flights:"/>
