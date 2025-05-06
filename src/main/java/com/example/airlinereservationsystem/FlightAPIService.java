@@ -12,12 +12,18 @@ import org.json.JSONObject;
 public class FlightAPIService {
 
     private static final String API_KEY = "4b849960d8ecc1ff2dc388f1896bb61f"; // Your Aviationstack API key
-    private static final String BASE_URL = "http://api.aviationstack.com/v1";
+    private static final String BASE_URL = "https://api.aviationstack.com/v1"; // Using HTTPS for secure connection
 
     /**
      * Search for flights with the given parameters
      */
     public List<Flight> searchFlights(String origin, String destination, String date) {
+        // Validate that origin and destination are different
+        if (origin.equals(destination)) {
+            System.out.println("Error: Origin and destination airports cannot be the same");
+            return new ArrayList<>(); // Return empty list
+        }
+
         List<Flight> flights = new ArrayList<>();
 
         try {
@@ -63,7 +69,9 @@ public class FlightAPIService {
             // Check if there's an error
             if (jsonResponse.has("error")) {
                 JSONObject error = jsonResponse.getJSONObject("error");
-                System.out.println("API Error: " + error.toString());
+                System.out.println("API Error Details: " + error.toString());
+                // Print the full response for debugging
+                System.out.println("Full API Response: " + response.toString().substring(0, Math.min(500, response.toString().length())));
                 return getFallbackFlights(origin, destination, date);
             }
 
@@ -127,6 +135,12 @@ public class FlightAPIService {
      * Get fallback flights in case the API doesn't work
      */
     private List<Flight> getFallbackFlights(String origin, String destination, String date) {
+        // Double-check that origin and destination are different, even in fallback
+        if (origin.equals(destination)) {
+            System.out.println("Cannot generate fallback flights: Origin and destination are the same");
+            return new ArrayList<>();
+        }
+
         List<Flight> flights = new ArrayList<>();
 
         // Add some sample flights

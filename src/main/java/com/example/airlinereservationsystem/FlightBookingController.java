@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlightBookingController {
@@ -16,9 +17,11 @@ public class FlightBookingController {
     @FXML private ListView<Flight> resultsListView;
     @FXML private Label recommendationLabel;
     @FXML private Label statusLabel;
+    @FXML private Button viewBookingsButton; // Add this if you have a button in FXML
 
     private FlightRecommendationSystem recommendationSystem = new FlightRecommendationSystem();
     private FlightAPIService apiService = new FlightAPIService();
+    private DB database = new DB(); // Add database connection
     private String currentUser = "guest"; // Default user
 
     @FXML
@@ -40,10 +43,14 @@ public class FlightBookingController {
         });
 
         statusLabel.setText("Ready to search for flights");
+
+        // Initialize database connection
+        database.connectToDatabase();
     }
 
     public void initializeUser(String username) {
         this.currentUser = username;
+        statusLabel.setText("Welcome, " + username + "! Ready to search for flights.");
     }
 
     @FXML
@@ -54,6 +61,12 @@ public class FlightBookingController {
 
         if (origin.isEmpty() || destination.isEmpty()) {
             showAlert("Please enter origin and destination airports");
+            return;
+        }
+
+        // Check if origin and destination are the same
+        if (origin.equals(destination)) {
+            showAlert("Origin and destination airports cannot be the same");
             return;
         }
 
@@ -72,10 +85,22 @@ public class FlightBookingController {
                     // Show recommendations
                     List<String> recommendations = recommendationSystem.recommendFlights(currentUser, 2);
 
-                    if (!recommendations.isEmpty()) {
-                        recommendationLabel.setText("AI Recommendation: Consider these flights: " + String.join(", ", recommendations));
-                    } else {
-                        recommendationLabel.setText("No AI recommendations available yet");
+                    // Try to get a recommendation from ChatGPT if available
+                    try {
+                        if (!recommendations.isEmpty()) {
+                            recommendationLabel.setText("AI Recommendation: Consider these flights: " + String.join(", ", recommendations));
+                        } else {
+                            // ChatGPT recommendation fallback
+                            String aiRec = ChatGpt.getFlightRecommendation(origin, destination);
+                            recommendationLabel.setText("AI Recommendation: Consider this flight: " + aiRec);
+                        }
+                    } catch (Exception e) {
+                        // If ChatGPT fails, use the existing recommendation
+                        if (!recommendations.isEmpty()) {
+                            recommendationLabel.setText("AI Recommendation: Consider these flights: " + String.join(", ", recommendations));
+                        } else {
+                            recommendationLabel.setText("No AI recommendations available yet");
+                        }
                     }
 
                     statusLabel.setText("Found " + flights.size() + " flights");
@@ -110,7 +135,24 @@ public class FlightBookingController {
             // Update UI on JavaFX thread
             javafx.application.Platform.runLater(() -> {
                 if (success) {
-                    showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully!");
+                    // Record the booking in the database
+                    try {
+                        boolean recordSuccess = database.recordBooking(
+                                currentUser,
+                                selectedFlight.getFlightNumber(),
+                                selectedFlight.getDepartureAirport(),
+                                selectedFlight.getArrivalAirport(),
+                                selectedFlight.getDepartureDate()
+                        );
+
+                        if (recordSuccess) {
+                            showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully and recorded in your account!");
+                        } else {
+                            showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully, but there was an issue recording it in your account.");
+                        }
+                    } catch (Exception e) {
+                        showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully, but there was an error recording it: " + e.getMessage());
+                    }
 
                     // Add a rating for this flight to improve future recommendations
                     recommendationSystem.addRating(currentUser, selectedFlight.getFlightNumber(), 5);
@@ -120,6 +162,45 @@ public class FlightBookingController {
                     statusLabel.setText("Booking failed");
                 }
             });
+        }).start();
+    }
+
+    @FXML
+    private void handleViewBookings(ActionEvent event) {
+        statusLabel.setText("Loading your bookings...");
+
+        // Run in a separate thread
+        new Thread(() -> {
+            try {
+                // Get user's bookings from database
+                List<String> bookings = database.getUserBookings(currentUser);
+
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (bookings.isEmpty()) {
+                        showAlert("You have no bookings yet.");
+                    } else {
+                        StringBuilder message = new StringBuilder("Your bookings:\n\n");
+                        for (String booking : bookings) {
+                            message.append(booking).append("\n");
+                        }
+
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Your Bookings");
+                        alert.setHeaderText(null);
+                        alert.setContentText(message.toString());
+                        alert.getDialogPane().setPrefSize(500, 300);
+                        alert.showAndWait();
+                    }
+
+                    statusLabel.setText("Ready to search for flights");
+                });
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    showAlert("Error loading bookings: " + e.getMessage());
+                    statusLabel.setText("Error loading bookings");
+                });
+            }
         }).start();
     }
 
