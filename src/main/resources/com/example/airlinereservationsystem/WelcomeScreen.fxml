@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.airlinereservationsystem.WelcomeController">
+    <children>
+        <VBox spacing="20.0" alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <Label text="Welcome to SkyPort" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e90ff;" />
+            <Label text="Your Gateway to Global Travel" style="-fx-font-size: 16px; -fx-text-fill: #444;" />
+            <Button text="Get Started" onAction="#handleGetStarted" style="-fx-padding: 10 20; -fx-font-size: 14px;" />
+        </VBox>
+    </children>
+</AnchorPane>
+
