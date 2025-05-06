@@ -21,13 +21,13 @@ public class FlightBookingController {
     @FXML private ListView<Flight> resultsListView;
     @FXML private Label recommendationLabel;
     @FXML private Label statusLabel;
-    @FXML private Button viewBookingsButton; // Add this if you have a button in FXML
+    @FXML private Button viewBookingsButton;
     @FXML private Button chatGptButton;
-    @FXML private Button signOutButton; // Added for sign-out functionality
+    @FXML private Button signOutButton;
 
     private FlightRecommendationSystem recommendationSystem = new FlightRecommendationSystem();
     private FlightAPIService apiService = new FlightAPIService();
-    private DB database = new DB(); // Add database connection
+    private DB database = new DB();
     private String currentUser = "guest"; // Default user
 
     @FXML
@@ -131,44 +131,27 @@ public class FlightBookingController {
             return;
         }
 
-        statusLabel.setText("Booking flight...");
+        statusLabel.setText("Proceeding to payment...");
 
-        // Run booking in a separate thread
-        new Thread(() -> {
-            // Book the flight
-            boolean success = apiService.bookFlight(selectedFlight.getFlightNumber(), currentUser, currentUser + "@example.com");
+        // Instead of booking directly, proceed to payment screen
+        try {
+            // Load the payment screen
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/PaymentScreen.fxml"));
+            Parent root = loader.load();
 
-            // Update UI on JavaFX thread
-            javafx.application.Platform.runLater(() -> {
-                if (success) {
-                    // Record the booking in the database
-                    try {
-                        boolean recordSuccess = database.recordBooking(
-                                currentUser,
-                                selectedFlight.getFlightNumber(),
-                                selectedFlight.getDepartureAirport(),
-                                selectedFlight.getArrivalAirport(),
-                                selectedFlight.getDepartureDate()
-                        );
+            // Get the controller and pass the flight and username data
+            PaymentController controller = loader.getController();
+            controller.initData(selectedFlight, currentUser);
 
-                        if (recordSuccess) {
-                            showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully and recorded in your account!");
-                        } else {
-                            showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully, but there was an issue recording it in your account.");
-                        }
-                    } catch (Exception e) {
-                        showAlert("Flight " + selectedFlight.getFlightNumber() + " booked successfully, but there was an error recording it: " + e.getMessage());
-                    }
-
-                    // Add a rating for this flight to improve future recommendations
-                    recommendationSystem.addRating(currentUser, selectedFlight.getFlightNumber(), 5);
-                    statusLabel.setText("Flight booked successfully");
-                } else {
-                    showAlert("Failed to book flight. Please try again.");
-                    statusLabel.setText("Booking failed");
-                }
-            });
-        }).start();
+            // Set the scene
+            Stage stage = (Stage) resultsListView.getScene().getWindow();
+            stage.setTitle("Payment - Flight " + selectedFlight.getFlightNumber());
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            statusLabel.setText("Error loading payment screen: " + e.getMessage());
+            showAlert("Error: Could not load payment screen. " + e.getMessage());
+        }
     }
 
     @FXML
