@@ -1,0 +1,47 @@
+/* Background gradient for the entire screen */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #1a1a1a, #333333);
+}
+
+/* Title Text */
+.payment-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+/* Container for payment info */
+.payment-box {
+    -fx-background-color: #333333;
+    -fx-padding: 20;
+    -fx-background-radius: 10;
+}
+
+/* Labels for general payment text */
+.payment-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+}
+
+/* Smaller text for details */
+.payment-text-small {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+/* Highlighted text for total amount */
+.payment-total {
+    -fx-font-size: 18px;
+    -fx-text-fill: #7FFF00; /* Lime green */
+}
+
+/* Note text under the main payment information */
+.payment-note {
+    -fx-text-fill: white;
+}
+
+/* Style for buttons */
+.payment-button {
+    -fx-background-color: #8A2BE2;
+    -fx-text-fill: white;
+}

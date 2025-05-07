@@ -79,7 +79,7 @@ public class LoginController {
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setTitle("Admin Navigation");
-            stage.setScene(new Scene(root, 500, 500));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Error loading admin navigation screen: " + e.getMessage());
@@ -97,7 +97,7 @@ public class LoginController {
 
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setTitle(title);
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Error loading next screen: " + e.getMessage());
@@ -109,7 +109,7 @@ public class LoginController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/airlinereservationsystem/SignupScreen.fxml"));
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 350));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Error switching to signup: " + e.getMessage());

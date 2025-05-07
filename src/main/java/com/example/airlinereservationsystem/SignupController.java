@@ -77,7 +77,7 @@ public class SignupController {
             // Fix the path to point to the correct location
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/airlinereservationsystem/LoginScreen.fxml"));
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Error switching to login: " + e.getMessage());

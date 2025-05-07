@@ -3,34 +3,46 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.text.Text?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.airlinereservationsystem.PaymentConfirmationController"
-      spacing="20"
-      stylesheets="@StyleFlight.css"
-      alignment="CENTER">
-    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="com.example.airlinereservationsystem.PaymentConfirmationController"
+            prefWidth="800" prefHeight="600"
+            styleClass="payment-root"
+            stylesheets="@PaymentConfrimationStyle.css">
 
-    <HBox alignment="CENTER_RIGHT" spacing="10">
-        <Button fx:id="backToAdminButton" text="Back to Admin Menu" onAction="#handleBackToAdmin"
-                style="-fx-background-color: #8A2BE2;"/>
-    </HBox>
+    <!-- Logo in the top-right corner -->
+    <ImageView fx:id="logoImage" fitHeight="80" fitWidth="100" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+        <image>
+            <Image url="@Images/skyport.png"/>
+        </image>
+    </ImageView>
 
-    <Text text="Payment Confirmed!" fill="white" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <!-- Main VBox content centered -->
+    <VBox spacing="25" alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
+        <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
-    <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #333333; -fx-padding: 20; -fx-background-radius: 10;">
-        <Label text="Thank you for your purchase!" style="-fx-font-size: 16px;"/>
-        <Label fx:id="bookingReferenceLabel" text="Booking Reference: ABC123" style="-fx-font-size: 14px;"/>
-        <Label fx:id="flightDetailsLabel" style="-fx-font-size: 14px;" wrapText="true"/>
-        <Label fx:id="passengerLabel" style="-fx-font-size: 14px;"/>
-        <Label fx:id="totalAmountLabel" style="-fx-font-size: 18px; -fx-text-fill: #7FFF00;"/>
+        <Text text="Payment Confirmed!" styleClass="payment-title"/>
+
+        <VBox alignment="CENTER" spacing="15" styleClass="payment-box">
+            <Label text="Thank you for your purchase!" styleClass="payment-text"/>
+            <Label fx:id="bookingReferenceLabel" text="Booking Reference: ABC123" styleClass="payment-text-small"/>
+            <Label fx:id="flightDetailsLabel" styleClass="payment-text-small" wrapText="true"/>
+            <Label fx:id="passengerLabel" styleClass="payment-text-small"/>
+            <Label fx:id="totalAmountLabel" styleClass="payment-total"/>
+        </VBox>
+
+        <Label text="A confirmation email has been sent to your registered email address."
+               wrapText="true" textAlignment="CENTER"
+               styleClass="payment-note"/>
+
+        <HBox alignment="CENTER" spacing="20">
+            <Button fx:id="backToAdminButton" text="Back to Admin Menu" onAction="#handleBackToAdmin" visible="false" styleClass="payment-button"/>
+            <Button fx:id="viewBookingsButton" text="View My Bookings" onAction="#handleViewBookings" styleClass="payment-button"/>
+            <Button fx:id="returnButton" text="Return to Flight Search" onAction="#handleReturn" styleClass="payment-button"/>
+        </HBox>
     </VBox>
-
-    <Label text="A confirmation email has been sent to your registered email address." wrapText="true" textAlignment="CENTER"/>
-
-    <HBox alignment="CENTER" spacing="20">
-        <Button fx:id="viewBookingsButton" text="View My Bookings" onAction="#handleViewBookings"/>
-        <Button fx:id="returnButton" text="Return to Flight Search" onAction="#handleReturn"/>
-    </HBox>
-</VBox>
+</AnchorPane>

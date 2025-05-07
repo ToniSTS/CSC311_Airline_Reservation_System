@@ -1,26 +1,36 @@
 .root {
-    -fx-background-color: black;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #cce0ff);
 }
 
-.label, .hyperlink {
-    -fx-text-fill: white;
+.title-text {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-fill: #003366;
 }
 
-.text-field, .password-field, .date-picker {
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: gray;
-    -fx-background-color: #222;
+.section-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: #003366;
+}
+
+.text-field {
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #007acc;
 }
 
 .button {
-    -fx-background-color: green;
+    -fx-background-color: #007acc;
     -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px 20px;
 }
 
 .list-view {
-    -fx-background-color: #222;
-    -fx-control-inner-background: #222;
-    -fx-text-fill: white;
+    -fx-font-size: 16px;
 }
 
 /* Style for sign-out button */

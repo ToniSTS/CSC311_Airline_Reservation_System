@@ -4,13 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FlightBookingController {
@@ -94,7 +92,7 @@ public class FlightBookingController {
 
             Stage stage = (Stage) backToAdminButton.getScene().getWindow();
             stage.setTitle("Admin Navigation");
-            stage.setScene(new Scene(root, 500, 500));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             statusLabel.setText("Error returning to admin menu: " + e.getMessage());
@@ -348,7 +346,7 @@ public class FlightBookingController {
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/airlinereservationsystem/LoginScreen.fxml"));
             Stage stage = (Stage) signOutButton.getScene().getWindow();
             stage.setTitle("Login");
-            stage.setScene(new Scene(root, 400, 300));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             statusLabel.setText("Error returning to login screen: " + e.getMessage());

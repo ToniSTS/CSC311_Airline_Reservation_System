@@ -16,8 +16,8 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airlinereservationsystem/WelcomeScreen.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root,400,300);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("Style.css")).toExternalForm());
+        Scene scene = new Scene(root,800,600);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/example/airlinereservationsystem/WelcomeStyle.css")).toExternalForm());
 
         primaryStage.setTitle("Airline Reservation - Welcome!");
 

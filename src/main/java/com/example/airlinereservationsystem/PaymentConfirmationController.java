@@ -120,7 +120,7 @@ public class PaymentConfirmationController {
 
             Stage stage = (Stage) backToAdminButton.getScene().getWindow();
             stage.setTitle("Admin Navigation");
-            stage.setScene(new Scene(root, 500, 500));
+            stage.setScene(new Scene(root, 800, 600));
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error returning to admin menu: " + e.getMessage());

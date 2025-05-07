@@ -3,16 +3,37 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.airlinereservationsystem.LoginController"
-      stylesheets="@Style.css">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="com.example.airlinereservationsystem.LoginController"
+            prefWidth="800" prefHeight="600"
+            stylesheets="@LoginStyle.css"
+            styleClass="root">
 
-    <Label text="Login to Airline Reservation"/>
-    <TextField fx:id="usernameField" promptText="Username"/>
-    <PasswordField fx:id="passwordField" promptText="Password"/>
-    <Button text="Login" onAction="#handleLogin"/>
-    <Hyperlink text="Create an account" onAction="#switchToSignup"/>
-    <Label fx:id="messageLabel" textFill="red"/>
-</VBox>
+    <VBox alignment="CENTER" spacing="20"
+          AnchorPane.leftAnchor="100" AnchorPane.topAnchor="50"
+          prefWidth="600" prefHeight="500">
+
+        <ImageView fx:id="logoImage" fitHeight="289.0" fitWidth="353.0">
+            <image>
+                <Image url="@Images/skyport.png" />
+            </image>
+        </ImageView>
+
+        <Text styleClass="title-text" text="Login to Airline Reservation" />
+
+        <TextField fx:id="usernameField" promptText="Username" styleClass="text-field" />
+
+        <PasswordField fx:id="passwordField" promptText="Password" styleClass="password-field" />
+
+        <Button text="Login" onAction="#handleLogin" styleClass="login-button" />
+
+        <Hyperlink text="Create an account" onAction="#switchToSignup" styleClass="hyperlink" />
+
+        <Label fx:id="messageLabel" styleClass="error-label"/>
+    </VBox>
+</AnchorPane>
